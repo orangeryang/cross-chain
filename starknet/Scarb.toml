@@ -10,4 +10,4 @@ starknet = ">=2.2.0"
 # sierra = true
 casm = true
 
-[lib]
+# [lib]
