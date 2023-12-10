@@ -54,7 +54,12 @@ mod gotit {
     }
 
     #[l1_handler]
-    fn sample(ref self: ContractState, from_address: felt252, id: u128, seed: u128,) -> felt252 {
+    fn sample(
+        ref self: ContractState, from_address: felt252, id: felt252, seed: felt252,
+    ) -> felt252 {
+        let id: u128 = id.try_into().unwrap();
+        let seed: u128 = seed.try_into().unwrap();
+
         self.emit(Sampled { from_address, id, seed });
 
         self.sam.write(id, seed);
