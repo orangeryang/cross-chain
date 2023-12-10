@@ -34,6 +34,25 @@ contract Test {
 
         return (msgHash, nonce);
     }
+
+    function test2() public payable returns (bytes32, uint256) {
+        uint256[] memory data = new uint256[](2);
+
+        data[0] = 1;
+        data[1] = 22222;
+
+        (bytes32 msgHash, uint256 nonce) = Starknet(
+            0xde29d060D45901Fb19ED6C6e959EB22d8626708e
+        ).sendMessageToL2{value: msg.value}(
+            0x076130542bcc89b85d6d0570ce1a16fb4a8a4b40cdcc53cad9a69d69f94ee88b,
+            0x000204f7e9243e4fca5489740ccd31dcd0a54619a7f4165cee73c191ef7271a1,
+            data
+        );
+
+        emit MessageHash(msgHash, nonce);
+
+        return (msgHash, nonce);
+    }
 }
 
 interface Starknet {
