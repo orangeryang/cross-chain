@@ -1,4 +1,4 @@
-// 0x076130542bcc89b85d6d0570ce1a16fb4a8a4b40cdcc53cad9a69d69f94ee88b
+// 0x069197d8c1393b216064d6587f6457dd5e8e1c27d361cc4a6fc6d18a98c4dd6b
 
 #[starknet::contract]
 mod gotit {
@@ -70,6 +70,11 @@ mod gotit {
     #[external(v0)]
     fn get_seed(self: @ContractState, id: u256) -> u256 {
         self.seed.read(id)
+    }
+
+    #[external(v0)]
+    fn get_sample(self: @ContractState, id: u128) -> u128 {
+        self.sam.read(id)
     }
 }
 

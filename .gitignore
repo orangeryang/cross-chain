@@ -397,5 +397,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-
-target/
+# Compile Results
+target
