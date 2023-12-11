@@ -32,8 +32,6 @@ contract Test {
     uint256 constant CC_STARKNET = 0x004d026d61777f03c9779ef6d8c1d2998be4fd598bbda14d3b0376daacbb26ba;
     // function selector
     uint256 constant RELATE = 0x02309e968b8f851ab48a62bde0b1f89c1bed2fdb5559d14c94bc6fdee675d5b4;
-    uint256 constant GET = 0x0017c00f03de8b5bd58d2016b59d251c13056b989171c5852949903bc043bc27;
-    uint256 constant SAMPLE = 0x000204f7e9243e4fca5489740ccd31dcd0a54619a7f4165cee73c191ef7271a1;
 
     // address owner;
     constructor() {
