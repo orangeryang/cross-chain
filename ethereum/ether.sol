@@ -29,7 +29,7 @@ contract Test {
     address constant STARKNET_CORE = 0xde29d060D45901Fb19ED6C6e959EB22d8626708e;
 
     // target contract on starknet
-    uint256 constant CC_STARKNET = 0x069197d8c1393b216064d6587f6457dd5e8e1c27d361cc4a6fc6d18a98c4dd6b;
+    uint256 constant CC_STARKNET = 0x004d026d61777f03c9779ef6d8c1d2998be4fd598bbda14d3b0376daacbb26ba;
     // function selector
     uint256 constant RELATE = 0x02309e968b8f851ab48a62bde0b1f89c1bed2fdb5559d14c94bc6fdee675d5b4;
     uint256 constant GET = 0x0017c00f03de8b5bd58d2016b59d251c13056b989171c5852949903bc043bc27;
@@ -63,6 +63,8 @@ contract Test {
 
         return (msgHash, nonce);
     }
+
+    // -----------------------------------------------------------------------
 
     function test() public payable returns (bytes32, uint256) {
         uint256[] memory data = new uint256[](5);

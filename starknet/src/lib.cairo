@@ -40,12 +40,12 @@ mod gotit {
     }
 
     #[external(v0)]
-    fn get_eth_owner(ref self: ContractState, id: u256) -> felt252 {
+    fn get_eth_owner(self: @ContractState, id: u256) -> felt252 {
         self.eth_owner.read(id.try_into().unwrap())
     }
 
     #[external(v0)]
-    fn get_seeds(ref self: ContractState, id: u256) -> u256 {
+    fn get_seeds(self: @ContractState, id: u256) -> u256 {
         self.seeds.read(id.try_into().unwrap())
     }
 
@@ -56,13 +56,13 @@ mod gotit {
     }
 
     #[external(v0)]
-    fn get_relater(ref self: ContractState) -> felt252 {
+    fn get_relater(self: @ContractState) -> felt252 {
         self.relater.read()
     }
 
-    // Since the relationship between token IDs and owners is one-to-one, 
-    // but the relationship between addresses is not necessarily one-to-one, 
-    // we have chosen token ID as a more granular
+    // Since the relationship between token IDs and owners is one-to-one
+    // but the relationship between addresses is not necessarily one-to-one
+    // we have chosen token ID as a more granular association
 
     #[l1_handler]
     fn relate(
