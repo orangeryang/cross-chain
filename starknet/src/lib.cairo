@@ -1,4 +1,4 @@
-// 0x069197d8c1393b216064d6587f6457dd5e8e1c27d361cc4a6fc6d18a98c4dd6b
+// 0x004d026d61777f03c9779ef6d8c1d2998be4fd598bbda14d3b0376daacbb26ba
 
 // this should be integrated into C&C contract
 #[starknet::contract]
@@ -80,7 +80,7 @@ mod gotit {
 
         self.emit(Related { from_address, id, seed, eth_account, starknet_account });
 
-        self.seed.write(id, seed);
+        self.seeds.write(id, seed);
         self.eth_owner.write(id, eth_account);
 
         from_address
