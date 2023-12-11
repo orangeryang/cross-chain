@@ -1,28 +1,99 @@
 // 0x069197d8c1393b216064d6587f6457dd5e8e1c27d361cc4a6fc6d18a98c4dd6b
 
+// this should be integrated into C&C contract
 #[starknet::contract]
 mod gotit {
-    use starknet::ContractAddress;
+    use core::traits::TryInto;
+    use core::option::OptionTrait;
+    use starknet::{ContractAddress, EthAddress, contract_address_try_from_felt252};
 
     #[storage]
     struct Storage {
-        seed: LegacyMap::<u256, u256>,
+        //
+        relater: felt252,
+        eth_owner: LegacyMap::<u128, felt252>,
+        seeds: LegacyMap::<u128, u256>,
+        // test
+        seed: LegacyMap::<u128, u256>,
         sam: LegacyMap::<u128, u128>
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
+        //
+        Related: Related,
+        // test
         BeCalled: BeCalled,
         Sampled: Sampled
     }
+
+    #[derive(Drop, starknet::Event)]
+    struct Related {
+        from_address: felt252,
+        #[key]
+        id: u128,
+        seed: u256,
+        #[key]
+        eth_account: felt252,
+        starknet_account: ContractAddress
+    }
+
+    #[external(v0)]
+    fn get_eth_owner(ref self: ContractState, id: u256) -> felt252 {
+        self.eth_owner.read(id.try_into().unwrap())
+    }
+
+    #[external(v0)]
+    fn get_seeds(ref self: ContractState, id: u256) -> u256 {
+        self.seeds.read(id.try_into().unwrap())
+    }
+
+    #[external(v0)]
+    fn set_relater(ref self: ContractState, eth_address: felt252) {
+        let test: EthAddress = eth_address.try_into().expect('invalid eth address');
+        self.relater.write(eth_address);
+    }
+
+    #[external(v0)]
+    fn get_relater(ref self: ContractState) -> felt252 {
+        self.relater.read()
+    }
+
+    // Since the relationship between token IDs and owners is one-to-one, 
+    // but the relationship between addresses is not necessarily one-to-one, 
+    // we have chosen token ID as a more granular
+
+    #[l1_handler]
+    fn relate(
+        ref self: ContractState,
+        from_address: felt252,
+        id: u128,
+        seed: u256,
+        eth_account: felt252,
+        starknet_account: felt252
+    ) -> felt252 {
+        assert(self.relater.read() == from_address, 'invalid relater');
+
+        let starknet_account: ContractAddress = contract_address_try_from_felt252(starknet_account)
+            .expect('invalid starknet address');
+
+        self.emit(Related { from_address, id, seed, eth_account, starknet_account });
+
+        self.seed.write(id, seed);
+        self.eth_owner.write(id, eth_account);
+
+        from_address
+    }
+
+    // ------------------------------------------------------------------------
 
     #[derive(Drop, starknet::Event)]
     struct BeCalled {
         #[key]
         from_address: felt252,
         #[key]
-        id: u256,
+        id: u128,
         seed: u256,
         eth_account: felt252,
         starknet_account: ContractAddress
@@ -41,11 +112,14 @@ mod gotit {
     fn get(
         ref self: ContractState,
         from_address: felt252,
-        id: u256,
+        id: u128,
         seed: u256,
         eth_account: felt252,
-        starknet_account: ContractAddress
+        starknet_account: felt252
     ) -> felt252 {
+        let starknet_account: ContractAddress = contract_address_try_from_felt252(starknet_account)
+            .expect('invalid starknet address');
+
         self.emit(BeCalled { from_address, id, seed, eth_account, starknet_account });
 
         self.seed.write(id, seed);
@@ -68,7 +142,7 @@ mod gotit {
     }
 
     #[external(v0)]
-    fn get_seed(self: @ContractState, id: u256) -> u256 {
+    fn get_seed(self: @ContractState, id: u128) -> u256 {
         self.seed.read(id)
     }
 
