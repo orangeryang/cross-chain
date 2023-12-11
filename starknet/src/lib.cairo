@@ -9,23 +9,15 @@ mod gotit {
 
     #[storage]
     struct Storage {
-        //
         relater: felt252,
         eth_owner: LegacyMap::<u128, felt252>,
         seeds: LegacyMap::<u128, u256>,
-        // test
-        seed: LegacyMap::<u128, u256>,
-        sam: LegacyMap::<u128, u128>
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
-        //
         Related: Related,
-        // test
-        BeCalled: BeCalled,
-        Sampled: Sampled
     }
 
     #[derive(Drop, starknet::Event)]
@@ -84,71 +76,6 @@ mod gotit {
         self.eth_owner.write(id, eth_account);
 
         from_address
-    }
-
-    // ------------------------------------------------------------------------
-
-    #[derive(Drop, starknet::Event)]
-    struct BeCalled {
-        #[key]
-        from_address: felt252,
-        #[key]
-        id: u128,
-        seed: u256,
-        eth_account: felt252,
-        starknet_account: ContractAddress
-    }
-
-    #[derive(Drop, starknet::Event)]
-    struct Sampled {
-        #[key]
-        from_address: felt252,
-        #[key]
-        id: u128,
-        seed: u128
-    }
-
-    #[l1_handler]
-    fn get(
-        ref self: ContractState,
-        from_address: felt252,
-        id: u128,
-        seed: u256,
-        eth_account: felt252,
-        starknet_account: felt252
-    ) -> felt252 {
-        let starknet_account: ContractAddress = contract_address_try_from_felt252(starknet_account)
-            .expect('invalid starknet address');
-
-        self.emit(BeCalled { from_address, id, seed, eth_account, starknet_account });
-
-        self.seed.write(id, seed);
-
-        from_address
-    }
-
-    #[l1_handler]
-    fn sample(
-        ref self: ContractState, from_address: felt252, id: felt252, seed: felt252,
-    ) -> felt252 {
-        let id: u128 = id.try_into().unwrap();
-        let seed: u128 = seed.try_into().unwrap();
-
-        self.emit(Sampled { from_address, id, seed });
-
-        self.sam.write(id, seed);
-
-        from_address
-    }
-
-    #[external(v0)]
-    fn get_seed(self: @ContractState, id: u128) -> u256 {
-        self.seed.read(id)
-    }
-
-    #[external(v0)]
-    fn get_sample(self: @ContractState, id: u128) -> u128 {
-        self.sam.read(id)
     }
 }
 

@@ -64,39 +64,4 @@ contract Test {
         return (msgHash, nonce);
     }
 
-    // -----------------------------------------------------------------------
-
-    function test() public payable returns (bytes32, uint256) {
-        uint256[] memory data = new uint256[](5);
-        uint256 seed = 74972505546522576923818356636106108867838777210876644873069541021231591033714;
-        uint128 low = uint128(seed);
-        uint128 high = uint128(seed >> 128);
-
-        data[0] = 1;
-        data[1] = uint256(low);
-        data[2] = uint256(high);
-        data[3] = uint256(uint160(address(this)));
-        data[4] = 0x00d0c2b4aB3d70769B34DFfA5Ee5eee11a54cD1D6dA4E89bf97AFa8bA35770f1;
-
-        (bytes32 msgHash, uint256 nonce) =
-            IStarknet(STARKNET_CORE).sendMessageToL2{value: msg.value}(CC_STARKNET, GET, data);
-
-        emit MessageHash(msgHash, nonce);
-
-        return (msgHash, nonce);
-    }
-
-    function test2() public payable returns (bytes32, uint256) {
-        uint256[] memory data = new uint256[](2);
-
-        data[0] = 1;
-        data[1] = 22222;
-
-        (bytes32 msgHash, uint256 nonce) =
-            IStarknet(STARKNET_CORE).sendMessageToL2{value: msg.value}(CC_STARKNET, SAMPLE, data);
-
-        emit MessageHash(msgHash, nonce);
-
-        return (msgHash, nonce);
-    }
 }
