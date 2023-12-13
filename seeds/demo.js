@@ -1,11 +1,11 @@
-const ethers = require("ethers");
-const fs = require("fs");
+import { JsonRpcProvider, Contract, toBeHex } from "ethers";
+import { writeFile } from "fs";
 
 const url = "https://rpc.mevblocker.io";
 // const url = "https://eth.merkle.io";
-const provider = new ethers.JsonRpcProvider(url);
+const provider = new JsonRpcProvider(url);
 
-const contract = new ethers.Contract("0x86f7692569914b5060ef39aab99e62ec96a6ed45", ["function seeds(uint256) public view returns (uint256)",], provider);
+const contract = new Contract("0x86f7692569914b5060ef39aab99e62ec96a6ed45", ["function seeds(uint256) public view returns (uint256)",], provider);
 
 const main = async () => {
 
@@ -20,7 +20,7 @@ const main = async () => {
         console.log("id: " + i);
         const seed = await contract.seeds(i);
         // console.log("seed: " + seed);
-        const hex = ethers.toBeHex(seed);
+        const hex = toBeHex(seed);
         console.log("hex: " + hex);
         array.push("self.seeds.write(" + i + "," + hex + ");");
 
@@ -32,7 +32,7 @@ const main = async () => {
     const filePath = "path/seeds.json";
     const content = arrayString;
 
-    fs.writeFile(filePath, content, (err) => {
+    writeFile(filePath, content, (err) => {
         if (err) {
             console.error("Error writing file:", err);
         } else {
