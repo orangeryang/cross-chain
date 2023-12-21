@@ -3,9 +3,13 @@
 // this should be integrated into C&C contract
 #[starknet::contract]
 mod gotit {
+    use core::array::ArrayTrait;
     use core::traits::TryInto;
     use core::option::OptionTrait;
-    use starknet::{ContractAddress, EthAddress, contract_address_try_from_felt252};
+    use starknet::{
+        ContractAddress, EthAddress, contract_address_try_from_felt252, send_message_to_l1_syscall,
+        SyscallResult
+    };
 
     #[storage]
     struct Storage {
@@ -76,6 +80,13 @@ mod gotit {
         self.eth_owner.write(id, eth_account);
 
         from_address
+    }
+
+    #[external(v0)]
+    fn send_to_l1(
+        ref self: ContractState, to: felt252, input: Array<felt252>
+    ) -> SyscallResult<()> {
+        send_message_to_l1_syscall(to, input.span())
     }
 }
 

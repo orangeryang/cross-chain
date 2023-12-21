@@ -19,7 +19,7 @@ interface IDungeons {
     function ownerOf(uint256 tokenId) external view returns (address owner);
 }
 
-contract Test {
+contract Messeger {
     event MessageHash(bytes32 msgHash, uint256 nonce);
 
     // cc on ethereum
