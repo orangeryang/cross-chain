@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 # Compile Results
 target
+
+.DS_Store
